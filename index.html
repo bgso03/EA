@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGIS: Fluxos Migratórios para São Paulo | Censo 7º Ano - Escola de Aplicação FEUSP</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Custom App Styles -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>">
+</head>
+<body class="theme-light">
+
+  <div id="app-container">
+
+    <!-- ====================================================================
+         Sidebar Panel
+         ==================================================================== -->
+    <aside id="sidebar">
+      
+      <!-- Header -->
+      <div class="sidebar-header">
+        <div class="school-badge">
+          <div class="usp-logo-icon" title="Universidade de São Paulo">USP</div>
+          <div class="school-info">
+            <span class="school-name">Escola de Aplicação da FEUSP</span>
+            <span class="school-sub">Censo Demográfico Escolar • 7º Ano EF</span>
+          </div>
+        </div>
+        <h1 class="app-title">Origens Geográficas &amp; Fluxos para SP</h1>
+        <p class="app-subtitle">Mapeamento interativo das trajetórias migratórias de estudantes, pais, avós e bisavós</p>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="sidebar-content">
+
+        <!-- Filter Box: Turma, Geração & Escopo -->
+        <div class="section-box">
+          <div class="section-title">
+            <span>Filtros Principais</span>
+          </div>
+
+          <div class="filter-group">
+            <div>
+              <label class="filter-label" for="select-turma">
+                🏫 Turma Analisada
+              </label>
+              <select id="select-turma" class="custom-select">
+                <!-- Dynamically populated in app.js -->
+              </select>
+            </div>
+
+            <div>
+              <label class="filter-label">
+                👥 Classificação por Geração
+              </label>
+              <div class="pill-grid">
+                <button type="button" class="pill-btn active" data-gen="todas" title="Exibe as 3 gerações coloridas simultaneamente">
+                  🌟 Todas Juntas
+                </button>
+                <button type="button" class="pill-btn" data-gen="bisavos" title="Exibe apenas as setas de Bisavós">
+                  🟣 Bisavós (3ª G.)
+                </button>
+                <button type="button" class="pill-btn" data-gen="avos" title="Exibe apenas as setas de Avós">
+                  🟡 Avós (2ª G.)
+                </button>
+                <button type="button" class="pill-btn" data-gen="pais" title="Exibe apenas as setas de Pais">
+                  🔵 Pais (1ª G.)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="filter-label">
+                🌐 Escopo Geográfico
+              </label>
+              <div class="pill-grid grid-3">
+                <button type="button" class="pill-btn active" data-scope="todos">
+                  Todos
+                </button>
+                <button type="button" class="pill-btn" data-scope="nacional">
+                  🇧🇷 Brasil
+                </button>
+                <button type="button" class="pill-btn" data-scope="internacional">
+                  🌍 Exterior
+                </button>
+              </div>
+            </div>
+
+            <!-- Search input -->
+            <div class="search-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="input-search" class="search-input" placeholder="Buscar estado ou país...">
+            </div>
+
+            <!-- Volume slider -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+              <label class="filter-label" for="filter-min-volume" style="margin-bottom: 0;">
+                Volume mínimo:
+              </label>
+              <span id="val-min-volume" style="font-size: 11px; font-weight: 700; color: var(--primary);">&gt;= 1</span>
+            </div>
+            <input type="range" id="filter-min-volume" min="1" max="15" value="1" step="1" style="width: 100%; accent-color: var(--primary); cursor: pointer;">
+
+          </div>
+        </div>
+
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Migrantes para SP</span>
+            <span class="kpi-value" id="kpi-total-migrantes">-</span>
+            <span class="kpi-sub">Indivíduos no filtro</span>
+          </div>
+
+          <div class="kpi-card sp">
+            <span class="kpi-label">Origens Mapeadas</span>
+            <span class="kpi-value" id="kpi-total-origens">-</span>
+            <span class="kpi-sub">Estados &amp; Países</span>
+          </div>
+
+          <div class="kpi-card bisavos">
+            <span class="kpi-label">Top Origem Brasil</span>
+            <span class="kpi-value" id="kpi-top-national" style="font-size: 14px;">-</span>
+            <span class="kpi-sub">Maior fluxo nacional</span>
+          </div>
+
+          <div class="kpi-card avos">
+            <span class="kpi-label">Top Internacional</span>
+            <span class="kpi-value" id="kpi-top-international" style="font-size: 14px;">-</span>
+            <span class="kpi-sub">Maior fluxo exterior</span>
+          </div>
+        </div>
+
+        <!-- Section Box: Retenção Local SP -->
+        <div class="section-box" style="padding: 10px 14px; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3);">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 12px; font-weight: 700; color: #10b981;">Nascidos em São Paulo</div>
+              <div style="font-size: 10.5px; color: var(--text-secondary);">População autóctone no filtro atual</div>
+            </div>
+            <div id="kpi-nascidos-sp" style="font-size: 20px; font-weight: 800; color: #10b981;">-</div>
+          </div>
+        </div>
+
+        <!-- Tabs Box -->
+        <div class="section-box">
+          <div class="tab-nav">
+            <button type="button" class="tab-btn active" data-tab="tab-ranking">
+              📊 Top Origens
+            </button>
+            <button type="button" class="tab-btn" data-tab="tab-generations">
+              📈 Por Geração
+            </button>
+            <button type="button" class="tab-btn" data-tab="tab-about">
+              ℹ️ Sobre o Censo
+            </button>
+          </div>
+
+          <!-- Tab 1: Ranking -->
+          <div id="tab-ranking" class="tab-pane active" style="margin-top: 10px;">
+            <div id="ranking-list" class="ranking-list">
+              <!-- Dynamically populated in app.js with high-contrast cards & generational bars -->
+            </div>
+          </div>
+
+          <!-- Tab 2: Generational Breakdown -->
+          <div id="tab-generations" class="tab-pane" style="margin-top: 10px;">
+            <div id="gen-breakdown-container">
+              <!-- Dynamically populated in app.js -->
+            </div>
+          </div>
+
+          <!-- Tab 3: About Census & Methodology -->
+          <div id="tab-about" class="tab-pane" style="margin-top: 10px;">
+            <div class="info-text">
+              Este WebGIS foi desenvolvido a partir dos dados do <strong>Censo Demográfico Escolar do 7º Ano do Ensino Fundamental</strong> da <strong>Escola de Aplicação da Faculdade de Educação da USP (FEUSP)</strong>.
+            </div>
+
+            <div class="info-highlight">
+              💡 <strong>Conceito Pedagógico:</strong> A atividade investiga as raízes genealógicas das famílias dos estudantes para compreender a formação socioespacial de São Paulo através dos fluxos migratórios internos (Nordeste, Sudeste, Sul) e internacionais (Europa, Ásia, Américas).
+            </div>
+
+            <div class="info-text" style="font-size: 11.5px;">
+              • <strong>Destino dos fluxos:</strong> Escola de Aplicação da FEUSP / São Paulo (Butantã).<br>
+              • <strong>Metodologia:</strong> Entrevistas e histórias orais de família compiladas em sala de aula.<br>
+              • <strong>Estudantes:</strong> 100% nascidos no Estado de São Paulo, revelando a concentração urbana contemporânea após gerações de migração.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="sidebar-footer">
+        <button type="button" id="btn-open-modal" class="btn-secondary">
+          📋 Ver Tabela Completa
+        </button>
+        <button type="button" id="btn-download-csv" class="btn-secondary">
+          📥 Baixar CSV
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Sidebar Toggle Button -->
+    <button id="sidebar-toggle" title="Recolher / Expandir Painel Lateral">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <!-- Map Canvas Container -->
+    <main id="map"></main>
+
+    <!-- ====================================================================
+         Floating Map Controls
+         ==================================================================== -->
+
+    <!-- Basemap Selector (Top Right - 100% Watermark-Free) -->
+    <div class="basemap-control" title="Alterar Camada de Fundo do Mapa">
+      <button type="button" class="basemap-btn active" data-basemap="political">
+        🗺️ Político
+      </button>
+      <button type="button" class="basemap-btn" data-basemap="satellite">
+        🛰️ Satélite
+      </button>
+      <button type="button" class="basemap-btn" data-basemap="hybrid">
+        🛰️ Híbrido
+      </button>
+      <button type="button" class="basemap-btn" data-basemap="dark">
+        🌌 Noturno
+      </button>
+    </div>
+
+    <!-- Divisas dos Estados Toggle (Below Basemap Selector) -->
+    <div class="divisas-toggle-control" title="Ligar/Desligar as divisas oficiais dos estados do Brasil (IBGE)">
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle-divisas" checked>
+        <span class="toggle-slider"></span>
+      </label>
+      <label for="toggle-divisas" class="toggle-label">📍 Divisas Estaduais (IBGE)</label>
+    </div>
+
+    <!-- Flow Animation Toggle (Top Left) -->
+    <div class="flow-toggle-control" title="Ativar ou desativar animação do fluxo de setas">
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle-flow-animation" checked>
+        <span class="toggle-slider"></span>
+      </label>
+      <label for="toggle-flow-animation" class="toggle-label">⚡ Animação</label>
+    </div>
+
+    <!-- Quick Zoom Presets (Bottom Left) -->
+    <div class="quick-zoom-bar">
+      <button type="button" id="btn-zoom-brasil" class="quick-btn" title="Enquadrar Brasil">
+        🇧🇷 Brasil
+      </button>
+      <button type="button" id="btn-zoom-world" class="quick-btn" title="Enquadrar Visão Global">
+        🌐 Mundo
+      </button>
+      <button type="button" id="btn-zoom-sp" class="quick-btn" title="Focar Escola de Aplicação FEUSP">
+        📍 Escola de Aplicação
+      </button>
+    </div>
+
+    <!-- Map Legend (Generational Colors) -->
+    <div class="map-legend">
+      <div class="legend-title">
+        <span>Setas por Geração</span>
+        <span style="font-size: 10px; color: var(--text-muted);">Origem ➔ SP</span>
+      </div>
+
+      <div class="legend-row">
+        <div class="legend-arrow-sample">
+          <div class="legend-line bisavos"></div>
+          <span style="color: var(--color-bisavos); font-size: 10px;">➔</span>
+        </div>
+        <span><strong>🟣 Bisavós</strong> (3ª Geração)</span>
+      </div>
+
+      <div class="legend-row">
+        <div class="legend-arrow-sample">
+          <div class="legend-line avos"></div>
+          <span style="color: var(--color-avos); font-size: 10px;">➔</span>
+        </div>
+        <span><strong>🟡 Avós</strong> (2ª Geração)</span>
+      </div>
+
+      <div class="legend-row">
+        <div class="legend-arrow-sample">
+          <div class="legend-line pais"></div>
+          <span style="color: var(--color-pais); font-size: 10px;">➔</span>
+        </div>
+        <span><strong>🔵 Pais</strong> (1ª Geração)</span>
+      </div>
+
+      <div class="legend-row" style="margin-top: 6px; border-top: 1px solid var(--border-color); padding-top: 5px;">
+        <span style="font-size: 14px;">🎓</span>
+        <span>Escola de Aplicação FEUSP (Destino)</span>
+      </div>
+
+      <div class="legend-row">
+        <span style="font-size: 14px;">📍</span>
+        <span>Divisas dos Estados (IBGE)</span>
+      </div>
+
+      <div class="legend-thickness-scale">
+        <span style="color: var(--text-muted);">Volume:</span>
+        <div class="thickness-sample">
+          <div class="thick-line-1"></div>
+          <span>1</span>
+        </div>
+        <div class="thickness-sample">
+          <div class="thick-line-2"></div>
+          <span>10</span>
+        </div>
+        <div class="thickness-sample">
+          <div class="thick-line-3"></div>
+          <span>35+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         Data Table Modal
+         ==================================================================== -->
+    <div id="table-modal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2 class="modal-title">Tabela Completa de Fluxos &amp; Origens Geográficas</h2>
+          <button type="button" id="btn-close-modal" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Origem</th>
+                  <th>Geração</th>
+                  <th>Região / Continente</th>
+                  <th>Qtd Geração</th>
+                  <th>Total do Local</th>
+                  <th>Distância até SP</th>
+                  <th>Detalhamento</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- Dynamically populated in app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="document.getElementById('table-modal').classList.remove('active')">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Political Boundaries (IBGE States & World Countries) -->
+  <script src="mapa_politico.js"></script>
+
+  <!-- Application Census Data -->
+  <script src="data.js"></script>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+
+</body>
+</html>

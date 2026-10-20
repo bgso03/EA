@@ -1,0 +1,564 @@
+// Dados do Censo Geográfico 7º Ano - Escola de Aplicação FEUSP
+window.CENSO_DATA = {
+  "metadata": {
+    "titulo": "WebGIS dos Fluxos Migratórios para São Paulo",
+    "subtitulo": "Censo Demográfico das Origens Geográficas - 7º Ano do Ensino Fundamental",
+    "escola": "Escola de Aplicação da FEUSP",
+    "universidade": "Universidade de São Paulo (USP)",
+    "ano": 2026,
+    "turmas": [
+      "7ºEF",
+      "7ºI",
+      "7ºII"
+    ],
+    "turmas_labels": {
+      "7ºEF": "Todas as Turmas (7º EF - 43 alunos)",
+      "7ºI": "Turma 7º I (23 alunos)",
+      "7ºII": "Turma 7º II (20 alunos)"
+    },
+    "geracoes": [
+      "todas",
+      "bisavos",
+      "avos",
+      "pais",
+      "estudantes"
+    ],
+    "geracoes_labels": {
+      "todas": "Todas as Gerações (Total Acumulado)",
+      "bisavos": "Bisavós (3ª Geração)",
+      "avos": "Avós (2ª Geração)",
+      "pais": "Pais (1ª Geração)",
+      "estudantes": "Estudantes (Geração Atual)"
+    },
+    "destino": {
+      "nome": "Escola de Aplicação da FEUSP",
+      "cidade": "São Paulo",
+      "uf": "SP",
+      "endereco": "Av. da Universidade, 308 - Cidade Universitária, Butantã, São Paulo - SP",
+      "lat": -23.559388,
+      "lng": -46.726584,
+      "capital_lat": -23.5505,
+      "capital_lng": -46.6333
+    }
+  },
+  "estados_meta": {
+    "Alagoas": {
+      "lat": -9.5713,
+      "lng": -36.782,
+      "uf": "AL",
+      "capital": "Maceió",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 1880
+    },
+    "Bahia": {
+      "lat": -12.5797,
+      "lng": -41.7007,
+      "uf": "BA",
+      "capital": "Salvador",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 1331
+    },
+    "Ceará": {
+      "lat": -5.4984,
+      "lng": -39.3206,
+      "uf": "CE",
+      "capital": "Fortaleza",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 2159
+    },
+    "Espírito Santo": {
+      "lat": -19.5687,
+      "lng": -40.5442,
+      "uf": "ES",
+      "capital": "Vitória",
+      "regiao": "Sudeste",
+      "cor": "#10b981",
+      "dist_km": 778
+    },
+    "Minas Gerais": {
+      "lat": -18.5122,
+      "lng": -44.555,
+      "uf": "MG",
+      "capital": "Belo Horizonte",
+      "regiao": "Sudeste",
+      "cor": "#10b981",
+      "dist_km": 605
+    },
+    "Paraíba": {
+      "lat": -7.2399,
+      "lng": -36.782,
+      "uf": "PB",
+      "capital": "João Pessoa",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 2102
+    },
+    "Paraná": {
+      "lat": -24.89,
+      "lng": -51.55,
+      "uf": "PR",
+      "capital": "Curitiba",
+      "regiao": "Sul",
+      "cor": "#8b5cf6",
+      "dist_km": 511
+    },
+    "Pernambuco": {
+      "lat": -8.8137,
+      "lng": -36.9541,
+      "uf": "PE",
+      "capital": "Recife",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 1942
+    },
+    "Piauí": {
+      "lat": -7.7183,
+      "lng": -42.7289,
+      "uf": "PI",
+      "capital": "Teresina",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 1812
+    },
+    "Rio de Janeiro": {
+      "lat": -22.9068,
+      "lng": -43.1729,
+      "uf": "RJ",
+      "capital": "Rio de Janeiro",
+      "regiao": "Sudeste",
+      "cor": "#10b981",
+      "dist_km": 370
+    },
+    "Rio Grande do Sul": {
+      "lat": -30.0346,
+      "lng": -51.2177,
+      "uf": "RS",
+      "capital": "Porto Alegre",
+      "regiao": "Sul",
+      "cor": "#8b5cf6",
+      "dist_km": 847
+    },
+    "Santa Catarina": {
+      "lat": -27.2423,
+      "lng": -50.2189,
+      "uf": "SC",
+      "capital": "Florianópolis",
+      "regiao": "Sul",
+      "cor": "#8b5cf6",
+      "dist_km": 539
+    },
+    "Sergipe": {
+      "lat": -10.5741,
+      "lng": -37.3857,
+      "uf": "SE",
+      "capital": "Aracaju",
+      "regiao": "Nordeste",
+      "cor": "#0284c7",
+      "dist_km": 1751
+    },
+    "São Paulo": {
+      "lat": -23.5505,
+      "lng": -46.6333,
+      "uf": "SP",
+      "capital": "São Paulo",
+      "regiao": "Sudeste",
+      "cor": "#f59e0b",
+      "dist_km": 10
+    }
+  },
+  "paises_meta": {
+    "Alemanha": {
+      "lat": 51.1657,
+      "lng": 10.4515,
+      "iso": "DE",
+      "continente": "Europa",
+      "emoji": "🇩🇪",
+      "capital": "Berlim",
+      "cor": "#f97316",
+      "dist_km": 10006
+    },
+    "Armênia": {
+      "lat": 40.0691,
+      "lng": 45.0382,
+      "iso": "AM",
+      "continente": "Eurásia / Cáucaso",
+      "emoji": "🇦🇲",
+      "capital": "Erevan",
+      "cor": "#ec4899",
+      "dist_km": 11808
+    },
+    "Áustria": {
+      "lat": 47.5162,
+      "lng": 14.5501,
+      "iso": "AT",
+      "continente": "Europa",
+      "emoji": "🇦🇹",
+      "capital": "Viena",
+      "cor": "#f97316",
+      "dist_km": 9990
+    },
+    "Brasil": {
+      "lat": -14.235,
+      "lng": -51.9253,
+      "iso": "BR",
+      "continente": "América do Sul",
+      "emoji": "🇧🇷",
+      "capital": "Brasília",
+      "cor": "#10b981",
+      "dist_km": 1172
+    },
+    "China": {
+      "lat": 35.8617,
+      "lng": 104.1954,
+      "iso": "CN",
+      "continente": "Ásia",
+      "emoji": "🇨🇳",
+      "capital": "Pequim",
+      "cor": "#ef4444",
+      "dist_km": 16908
+    },
+    "El Salvador": {
+      "lat": 13.7942,
+      "lng": -88.8965,
+      "iso": "SV",
+      "continente": "América Central",
+      "emoji": "🇸🇻",
+      "capital": "San Salvador",
+      "cor": "#06b6d4",
+      "dist_km": 6186
+    },
+    "França": {
+      "lat": 46.2276,
+      "lng": 2.2137,
+      "iso": "FR",
+      "continente": "Europa",
+      "emoji": "🇫🇷",
+      "capital": "Paris",
+      "cor": "#f97316",
+      "dist_km": 9190
+    },
+    "Inglaterra - RU": {
+      "lat": 55.3781,
+      "lng": -3.436,
+      "iso": "GB",
+      "continente": "Europa",
+      "emoji": "🇬🇧",
+      "capital": "Londres",
+      "cor": "#f97316",
+      "dist_km": 9688
+    },
+    "Itália": {
+      "lat": 41.8719,
+      "lng": 12.5674,
+      "iso": "IT",
+      "continente": "Europa",
+      "emoji": "🇮🇹",
+      "capital": "Roma",
+      "cor": "#f97316",
+      "dist_km": 9486
+    },
+    "Japão": {
+      "lat": 36.2048,
+      "lng": 138.2529,
+      "iso": "JP",
+      "continente": "Ásia",
+      "emoji": "🇯🇵",
+      "capital": "Tóquio",
+      "cor": "#ef4444",
+      "dist_km": 18530
+    },
+    "Polônia": {
+      "lat": 51.9194,
+      "lng": 19.1451,
+      "iso": "PL",
+      "continente": "Europa",
+      "emoji": "🇵🇱",
+      "capital": "Varsóvia",
+      "cor": "#f97316",
+      "dist_km": 10540
+    },
+    "Portugal": {
+      "lat": 39.3999,
+      "lng": -8.2245,
+      "iso": "PT",
+      "continente": "Europa",
+      "emoji": "🇵🇹",
+      "capital": "Lisboa",
+      "cor": "#f97316",
+      "dist_km": 8062
+    },
+    "Rússia": {
+      "lat": 61.524,
+      "lng": 105.3188,
+      "iso": "RU",
+      "continente": "Eurásia",
+      "emoji": "🇷🇺",
+      "capital": "Moscou",
+      "cor": "#ec4899",
+      "dist_km": 15290
+    },
+    "Ucrânia": {
+      "lat": 48.3794,
+      "lng": 31.1656,
+      "iso": "UA",
+      "continente": "Europa",
+      "emoji": "🇺🇦",
+      "capital": "Kiev",
+      "cor": "#f97316",
+      "dist_km": 11103
+    }
+  },
+  "dados_brutos": {
+    "estados": {
+      "estudantes": {
+        "7ºI": {
+          "São Paulo": 23
+        },
+        "7ºII": {
+          "São Paulo": 20
+        },
+        "7ºEF": {
+          "São Paulo": 43
+        }
+      },
+      "pais": {
+        "7ºI": {
+          "Alagoas": 1,
+          "Bahia": 1,
+          "Minas Gerais": 2,
+          "Paraíba": 1,
+          "Paraná": 1,
+          "Pernambuco": 1,
+          "Rio de Janeiro": 2,
+          "São Paulo": 35
+        },
+        "7ºII": {
+          "Alagoas": 1,
+          "Bahia": 2,
+          "Paraná": 2,
+          "Pernambuco": 2,
+          "Rio Grande do Sul": 1,
+          "Santa Catarina": 1,
+          "São Paulo": 28
+        },
+        "7ºEF": {
+          "Alagoas": 2,
+          "Bahia": 3,
+          "Minas Gerais": 2,
+          "Paraíba": 1,
+          "Paraná": 3,
+          "Pernambuco": 3,
+          "Rio de Janeiro": 2,
+          "Rio Grande do Sul": 1,
+          "Santa Catarina": 1,
+          "São Paulo": 63
+        }
+      },
+      "avos": {
+        "7ºI": {
+          "Alagoas": 3,
+          "Bahia": 12,
+          "Ceará": 4,
+          "Minas Gerais": 11,
+          "Paraná": 1,
+          "Pernambuco": 4,
+          "Piauí": 1,
+          "Rio Grande do Sul": 2,
+          "São Paulo": 42,
+          "Rio de Janeiro": 1
+        },
+        "7ºII": {
+          "Alagoas": 2,
+          "Bahia": 7,
+          "Ceará": 2,
+          "Minas Gerais": 5,
+          "Paraná": 2,
+          "Pernambuco": 9,
+          "Piauí": 1,
+          "Rio Grande do Sul": 2,
+          "Santa Catarina": 2,
+          "São Paulo": 29,
+          "Sergipe": 1
+        },
+        "7ºEF": {
+          "Alagoas": 5,
+          "Bahia": 19,
+          "Ceará": 6,
+          "Minas Gerais": 16,
+          "Paraná": 3,
+          "Pernambuco": 13,
+          "Piauí": 2,
+          "Rio Grande do Sul": 4,
+          "Santa Catarina": 2,
+          "São Paulo": 71,
+          "Sergipe": 1,
+          "Rio de Janeiro": 1
+        }
+      },
+      "bisavos": {
+        "7ºI": {
+          "Alagoas": 6,
+          "Bahia": 28,
+          "Ceará": 8,
+          "Espírito Santo": 1,
+          "Minas Gerais": 24,
+          "Pernambuco": 8,
+          "Rio Grande do Sul": 6,
+          "São Paulo": 43
+        },
+        "7ºII": {
+          "Alagoas": 5,
+          "Bahia": 11,
+          "Ceará": 5,
+          "Minas Gerais": 11,
+          "Paraíba": 2,
+          "Pernambuco": 11,
+          "Piauí": 2,
+          "Rio Grande do Sul": 4,
+          "Santa Catarina": 1,
+          "São Paulo": 28,
+          "Sergipe": 2
+        },
+        "7ºEF": {
+          "Alagoas": 11,
+          "Bahia": 39,
+          "Ceará": 13,
+          "Espírito Santo": 1,
+          "Minas Gerais": 35,
+          "Paraíba": 2,
+          "Pernambuco": 19,
+          "Piauí": 2,
+          "Rio Grande do Sul": 10,
+          "Santa Catarina": 1,
+          "São Paulo": 71,
+          "Sergipe": 2
+        }
+      }
+    },
+    "paises": {
+      "estudantes": {
+        "7ºI": {
+          "Brasil": 23
+        },
+        "7ºII": {
+          "Brasil": 20
+        },
+        "7ºEF": {
+          "Brasil": 43
+        }
+      },
+      "pais": {
+        "7ºI": {
+          "Alemanha": 1,
+          "Brasil": 44
+        },
+        "7ºII": {
+          "Brasil": 37,
+          "China": 2,
+          "El Salvador": 1
+        },
+        "7ºEF": {
+          "Alemanha": 1,
+          "Brasil": 81,
+          "China": 2,
+          "El Salvador": 1
+        }
+      },
+      "avos": {
+        "7ºI": {
+          "Brasil": 75,
+          "Portugal": 2
+        },
+        "7ºII": {
+          "Brasil": 62,
+          "China": 4,
+          "El Salvador": 2,
+          "França": 1,
+          "Itália": 1,
+          "Portugal": 2
+        },
+        "7ºEF": {
+          "Brasil": 137,
+          "China": 4,
+          "El Salvador": 2,
+          "França": 1,
+          "Itália": 1,
+          "Portugal": 4
+        }
+      },
+      "bisavos": {
+        "7ºI": {
+          "Alemanha": 2,
+          "Armênia": 4,
+          "Áustria": 1,
+          "Brasil": 120,
+          "Japão": 1,
+          "Polônia": 1,
+          "Rússia": 1
+        },
+        "7ºII": {
+          "Brasil": 82,
+          "França": 2,
+          "Inglaterra - RU": 2,
+          "Itália": 1,
+          "Polônia": 2,
+          "Portugal": 6,
+          "Ucrânia": 1
+        },
+        "7ºEF": {
+          "Alemanha": 2,
+          "Armênia": 4,
+          "Áustria": 1,
+          "Brasil": 202,
+          "França": 2,
+          "Inglaterra - RU": 2,
+          "Itália": 1,
+          "Japão": 1,
+          "Polônia": 3,
+          "Portugal": 6,
+          "Rússia": 1,
+          "Ucrânia": 1
+        }
+      }
+    },
+    "sem_info": {
+      "estudantes": {
+        "7ºI": 0,
+        "7ºII": 0,
+        "7ºEF": 0
+      },
+      "pais": {
+        "7ºI": 1,
+        "7ºII": 0,
+        "7ºEF": 1
+      },
+      "avos": {
+        "7ºI": 6,
+        "7ºII": 11,
+        "7ºEF": 17
+      },
+      "bisavos": {
+        "7ºI": 26,
+        "7ºII": 59,
+        "7ºEF": 85
+      }
+    },
+    "irmaos": {
+      "7ºI": {
+        "Sim": 20,
+        "Não": 3
+      },
+      "7ºII": {
+        "Sim": 16,
+        "Não": 4
+      },
+      "7ºEF": {
+        "Sim": 36,
+        "Não": 7
+      }
+    }
+  }
+};
